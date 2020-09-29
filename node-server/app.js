@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 
 const departmentController = require('./controllers/departmentController');
+const productController = require('./controllers/productController');
 
 const app = express();
 
@@ -15,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/app',
     {useNewUrlParser: true, useUnifiedTopology: true});
 
 app.use('/departments', departmentController);
-//app.use('/products', departmentController);
+app.use('/products', productController);
 
 app.listen(3000);
 
