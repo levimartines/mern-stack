@@ -50,7 +50,7 @@ router.patch('/:id', (req, res) => {
           prod.name = req.body.name;
           prod.price = req.body.price;
           prod.stock = req.body.stock;
-          prod.departaments = req.body.departaments;
+          prod.departments = req.body.departments;
           prod.save((err, p) => {
             err ? res.status(500).send(err) : res.status(200).send(p);
           });

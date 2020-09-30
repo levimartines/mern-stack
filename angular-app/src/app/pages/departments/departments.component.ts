@@ -3,7 +3,7 @@ import {Department} from '../../models/department';
 import {DepartmentService} from '../../services/department.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subject} from 'rxjs';
-import {takeUntil} from "rxjs/operators";
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-departments',

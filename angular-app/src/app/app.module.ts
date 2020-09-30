@@ -10,6 +10,7 @@ import {ProductsComponent} from './pages/products/products.component';
 import {DepartmentsComponent} from './pages/departments/departments.component';
 import {ProductService} from './services/product.service';
 import {DepartmentService} from './services/department.service';
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
   declarations: [
@@ -17,14 +18,15 @@ import {DepartmentService} from './services/department.service';
     ProductsComponent,
     DepartmentsComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppMaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppMaterialModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        MatChipsModule,
+    ],
   providers: [
     DepartmentService,
     ProductService,

@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ProductService} from '../../services/product.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {Product} from '../../models/product';
 import {DepartmentService} from '../../services/department.service';
 import {Department} from '../../models/department';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-products',
@@ -17,11 +18,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
   products: Product[];
   departments: Department[];
   private unsubscribe$: Subject<any> = new Subject<any>();
+  @ViewChild('formElement') formElement: NgForm;
 
   constructor(
     private productService: ProductService,
     private departmentService: DepartmentService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar) {
     this.productForm = this.fb.group({
       _id: [null],
       name: ['', [Validators.required]],
@@ -45,6 +48,37 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    console.log('Save');
+    const data = this.productForm.value;
+    if (data._id != null) {
+      this.productService.update(data).subscribe(() => {
+        this.notify('Updated!');
+      });
+    } else {
+      this.productService.save(data).subscribe(res => {
+        this.notify('Inserted!');
+      });
+    }
+    this.resetForm();
+  }
+
+  resetForm(): void {
+    console.log(this.formElement);
+    this.formElement.resetForm();
+  }
+
+  notify(msg: string): void {
+    this.snackBar.open(msg, 'OK', {duration: 3000});
+  }
+
+  delete(prod: Product): void {
+    this.productService.delete(prod).subscribe(
+      () => {
+        this.notify('Deleted!');
+      },
+      error => console.log(error));
+  }
+
+  edit(prod: Product): void {
+    this.productForm.setValue(prod);
   }
 }

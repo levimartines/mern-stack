@@ -24,27 +24,26 @@ export class ProductService {
 
   getAll(): Observable<Product[]> {
     if (!this.loaded) {
-      combineLatest([this.http.get<Product[]>(this.url),
-        this.departmentService.getAll]
-      ).pipe(
+      combineLatest([
+        this.http.get<Product[]>(this.url),
+        this.departmentService.getAll()
+        ]).pipe(
+        tap(([prods, deps]) => console.log(prods, deps)),
         map(([products, departments]: any) => {
           for (const p of products) {
-            const ids = p.departments as string[];
+            const ids = (p.departments as string[]);
             p.departments = ids.map((id) => departments.find(dep => dep._id === id));
           }
           return products;
         })
       ).subscribe(this.productSubject$);
-
-      this.http.get<Product[]>(this.url)
-      .subscribe(this.productSubject$);
       this.loaded = true;
     }
     return this.productSubject$.asObservable();
   }
 
   save(prod: Product): Observable<Product> {
-    const departments = (prod.departaments as Department[]).map(d => d._id);
+    const departments = (prod.departments as Department[]).map(d => d._id);
     return this.http.post<Product>(this.url, {...prod, departments}).pipe(
       tap((res: Product) => this.productSubject$.getValue().push({...prod, _id: res._id}))
     );
@@ -63,7 +62,7 @@ export class ProductService {
   }
 
   update(prod: Product): Observable<Product> {
-    const departments = (prod.departaments as Department[]).map(d => d._id);
+    const departments = (prod.departments as Department[]).map(d => d._id);
     return this.http.patch<Product>(this.url + prod._id, {...prod, departments}).pipe(
       tap((res) => {
         const products = this.productSubject$.getValue();
